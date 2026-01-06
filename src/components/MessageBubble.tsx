@@ -1,15 +1,17 @@
 import { Message } from '@/types';
 import { cn } from '@/lib/utils';
-import { Copy, Check, Sparkles } from 'lucide-react';
+import { Copy, Check, Sparkles, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
 interface MessageBubbleProps {
   message: Message;
+  isLatestSuggestion?: boolean;
+  onRegenerate?: () => void;
 }
 
-export function MessageBubble({ message }: MessageBubbleProps) {
+export function MessageBubble({ message, isLatestSuggestion, onRegenerate }: MessageBubbleProps) {
   const [copied, setCopied] = useState(false);
   const isReceived = message.type === 'received';
 
@@ -23,8 +25,8 @@ export function MessageBubble({ message }: MessageBubbleProps) {
   return (
     <div
       className={cn(
-        'flex gap-2 animate-slide-up',
-        isReceived ? 'justify-start' : 'justify-end'
+        'flex flex-col gap-2 animate-slide-up',
+        isReceived ? 'items-start' : 'items-end'
       )}
     >
       <div
@@ -43,20 +45,35 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
         
         {!isReceived && (
-          <Button
-            variant="ghost"
-            size="iconSm"
-            onClick={handleCopy}
-            className="absolute -bottom-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 hover:bg-background shadow-soft"
-          >
-            {copied ? (
-              <Check className="h-3 w-3 text-green-500" />
-            ) : (
-              <Copy className="h-3 w-3" />
-            )}
-          </Button>
+          <div className="absolute -bottom-1 -right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <Button
+              variant="ghost"
+              size="iconSm"
+              onClick={handleCopy}
+              className="bg-background/80 hover:bg-background shadow-soft"
+            >
+              {copied ? (
+                <Check className="h-3 w-3 text-green-500" />
+              ) : (
+                <Copy className="h-3 w-3" />
+              )}
+            </Button>
+          </div>
         )}
       </div>
+
+      {/* Regenerate button for the latest suggestion */}
+      {!isReceived && isLatestSuggestion && onRegenerate && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onRegenerate}
+          className="text-xs text-muted-foreground hover:text-foreground gap-1.5"
+        >
+          <RefreshCw className="h-3 w-3" />
+          Not quite right? Refine it
+        </Button>
+      )}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { ConversationHeader } from '@/components/ConversationHeader';
 import { ChatInput } from '@/components/ChatInput';
 import { MessageBubble } from '@/components/MessageBubble';
 import { EmptyState } from '@/components/EmptyState';
+import { RefineInput } from '@/components/RefineInput';
 import { useConversation } from '@/hooks/useConversation';
 import { defaultPersonas, defaultGoals } from '@/data/defaults';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -13,11 +14,14 @@ const Index = () => {
     selectedPersona,
     selectedGoal,
     isGenerating,
+    showRefineInput,
     setSelectedPersona,
     setSelectedGoal,
     addMessage,
     generateReply,
     clearConversation,
+    openRefineInput,
+    closeRefineInput,
   } = useConversation();
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -31,6 +35,11 @@ const Index = () => {
   const handleSendMessage = (content: string) => {
     addMessage(content, 'received');
   };
+
+  // Find the latest suggested message
+  const latestSuggestionId = messages
+    .filter(m => m.type === 'suggested')
+    .pop()?.id;
 
   return (
     <div className="flex flex-col h-screen bg-background">
@@ -52,7 +61,12 @@ const Index = () => {
           <ScrollArea className="flex-1" ref={scrollRef}>
             <div className="max-w-3xl mx-auto p-4 space-y-4">
               {messages.map((message) => (
-                <MessageBubble key={message.id} message={message} />
+                <MessageBubble
+                  key={message.id}
+                  message={message}
+                  isLatestSuggestion={message.id === latestSuggestionId}
+                  onRegenerate={message.id === latestSuggestionId ? openRefineInput : undefined}
+                />
               ))}
               {isGenerating && (
                 <div className="flex justify-end">
@@ -73,12 +87,20 @@ const Index = () => {
         )}
       </main>
 
-      <ChatInput
-        onSend={handleSendMessage}
-        onGenerateReply={generateReply}
-        hasMessages={messages.length > 0}
-        isGenerating={isGenerating}
-      />
+      {showRefineInput ? (
+        <RefineInput
+          onSubmit={(instruction) => generateReply(instruction)}
+          onCancel={closeRefineInput}
+          isGenerating={isGenerating}
+        />
+      ) : (
+        <ChatInput
+          onSend={handleSendMessage}
+          onGenerateReply={() => generateReply()}
+          hasMessages={messages.length > 0}
+          isGenerating={isGenerating}
+        />
+      )}
     </div>
   );
 };
