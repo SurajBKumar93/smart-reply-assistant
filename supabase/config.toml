@@ -1,0 +1,4 @@
+project_id = "ogtayrocuvadvbbcknyp"
+
+[functions.generate-reply]
+verify_jwt = false
