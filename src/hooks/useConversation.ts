@@ -1,54 +1,12 @@
 import { useState, useCallback } from 'react';
 import { Message, Persona, Goal } from '@/types';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
-const generateMockReply = (
-  messages: Message[],
-  persona?: Persona,
-  goal?: Goal,
-  refinementInstruction?: string
-): string => {
-  const lastReceived = messages.filter(m => m.type === 'received').pop();
-  if (!lastReceived) return "I'm not sure what to reply to.";
-
-  // Mock smart replies based on context and refinement
-  const baseReplies = [
-    `Thank you for reaching out. I appreciate you taking the time to share this with me. I'd love to discuss this further at your convenience.`,
-    `I understand your perspective on this. Let me think about the best way to move forward, and I'll get back to you with some concrete next steps.`,
-    `That's a great point. I've been considering the same thing, and I believe we can find a solution that works for everyone.`,
-    `I really appreciate your patience here. Let me look into this and provide you with a more detailed response soon.`,
-    `Thanks for the update. I'm on board with this approach and look forward to seeing how things develop.`,
-  ];
-
-  // Refined versions based on common instructions
-  if (refinementInstruction) {
-    const instruction = refinementInstruction.toLowerCase();
-    
-    if (instruction.includes('shorter') || instruction.includes('concise')) {
-      return `Thanks for sharing. I'll review and get back to you soon.`;
-    }
-    if (instruction.includes('formal')) {
-      return `Dear colleague, I acknowledge receipt of your message and appreciate you bringing this matter to my attention. I shall review the details carefully and respond with my considered thoughts at the earliest opportunity.`;
-    }
-    if (instruction.includes('friendly') || instruction.includes('casual')) {
-      return `Hey! Thanks so much for this 😊 Really appreciate you thinking of me. Let me take a look and I'll circle back soon!`;
-    }
-    if (instruction.includes('urgent') || instruction.includes('urgency')) {
-      return `Thanks for flagging this. I understand the time-sensitive nature of this matter. I'm prioritizing this now and will have a response to you within the hour.`;
-    }
-    if (instruction.includes('soft') || instruction.includes('gentle')) {
-      return `I really appreciate you sharing this with me. I hear what you're saying, and I want to take some time to think about how we can move forward together.`;
-    }
-    if (instruction.includes('question')) {
-      return `Thank you for bringing this up. I've given it some thought and I'm leaning towards moving forward. What are your thoughts on the timeline?`;
-    }
-
-    // Generic refined response
-    return `I appreciate your message. Based on your feedback, I'd like to propose we ${refinementInstruction.toLowerCase()}. What do you think?`;
-  }
-
-  return baseReplies[Math.floor(Math.random() * baseReplies.length)];
-};
+interface GenerateReplyResponse {
+  reply?: string;
+  error?: string;
+}
 
 export function useConversation() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -56,6 +14,45 @@ export function useConversation() {
   const [selectedGoal, setSelectedGoal] = useState<Goal | undefined>();
   const [isGenerating, setIsGenerating] = useState(false);
   const [showRefineInput, setShowRefineInput] = useState(false);
+
+  const callGenerateReplyAPI = async (
+    allMessages: Message[],
+    persona: Persona,
+    goal: Goal,
+    refinementInstruction?: string
+  ): Promise<string> => {
+    const { data, error } = await supabase.functions.invoke<GenerateReplyResponse>('generate-reply', {
+      body: {
+        messages: allMessages.map(m => ({ content: m.content, type: m.type })),
+        persona: {
+          name: persona.name,
+          description: persona.description,
+          tone: persona.tone,
+          messageLength: persona.messageLength,
+        },
+        goal: {
+          label: goal.label,
+          description: goal.description,
+        },
+        refinementInstruction,
+      },
+    });
+
+    if (error) {
+      console.error('Edge function error:', error);
+      throw new Error(error.message || 'Failed to generate reply');
+    }
+
+    if (data?.error) {
+      throw new Error(data.error);
+    }
+
+    if (!data?.reply) {
+      throw new Error('No reply received');
+    }
+
+    return data.reply;
+  };
 
   const addMessage = useCallback((content: string, type: 'received' | 'suggested') => {
     const newMessage: Message = {
@@ -89,21 +86,27 @@ export function useConversation() {
       return;
     }
 
-    // Auto-generate reply
+    // Auto-generate reply using AI
     setIsGenerating(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
     
-    const reply = generateMockReply([...messages, newMessage], selectedPersona, selectedGoal);
-    
-    const replyMessage: Message = {
-      id: (Date.now() + 1).toString(),
-      content: reply,
-      type: 'suggested',
-      timestamp: new Date(),
-    };
-    setMessages(prev => [...prev, replyMessage]);
-    toast.success('Reply generated! Click to copy.');
-    setIsGenerating(false);
+    try {
+      const allMessages = [...messages, newMessage];
+      const reply = await callGenerateReplyAPI(allMessages, selectedPersona, selectedGoal);
+      
+      const replyMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: reply,
+        type: 'suggested',
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, replyMessage]);
+      toast.success('Reply generated! Click to copy.');
+    } catch (error) {
+      console.error('Error generating reply:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to generate reply');
+    } finally {
+      setIsGenerating(false);
+    }
   }, [messages, selectedPersona, selectedGoal]);
 
   const replaceLastSuggestion = useCallback((content: string) => {
@@ -143,20 +146,22 @@ export function useConversation() {
     setIsGenerating(true);
     setShowRefineInput(false);
     
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    const reply = generateMockReply(messages, selectedPersona, selectedGoal, refinementInstruction);
-    
-    if (refinementInstruction) {
-      replaceLastSuggestion(reply);
-      toast.success('Reply refined!');
-    } else {
-      addMessage(reply, 'suggested');
-      toast.success('Reply generated! Click to copy.');
+    try {
+      const reply = await callGenerateReplyAPI(messages, selectedPersona, selectedGoal, refinementInstruction);
+      
+      if (refinementInstruction) {
+        replaceLastSuggestion(reply);
+        toast.success('Reply refined!');
+      } else {
+        addMessage(reply, 'suggested');
+        toast.success('Reply generated! Click to copy.');
+      }
+    } catch (error) {
+      console.error('Error generating reply:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to generate reply');
+    } finally {
+      setIsGenerating(false);
     }
-    
-    setIsGenerating(false);
   }, [messages, selectedPersona, selectedGoal, addMessage, replaceLastSuggestion]);
 
   const clearConversation = useCallback(() => {
