@@ -6,16 +6,19 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
+import { CreateGoalDialog } from './CreateGoalDialog';
 
 interface GoalSelectorProps {
   goals: Goal[];
   selectedGoal?: Goal;
   onSelect: (goal: Goal) => void;
+  onCreateGoal: (goal: Goal) => void;
 }
 
-export function GoalSelector({ goals, selectedGoal, onSelect }: GoalSelectorProps) {
+export function GoalSelector({ goals, selectedGoal, onSelect, onCreateGoal }: GoalSelectorProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -53,6 +56,8 @@ export function GoalSelector({ goals, selectedGoal, onSelect }: GoalSelectorProp
             </div>
           </DropdownMenuItem>
         ))}
+        <DropdownMenuSeparator />
+        <CreateGoalDialog onCreate={onCreateGoal} />
       </DropdownMenuContent>
     </DropdownMenu>
   );

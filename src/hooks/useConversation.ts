@@ -65,7 +65,46 @@ export function useConversation() {
       timestamp: new Date(),
     };
     setMessages(prev => [...prev, newMessage]);
+    return newMessage;
   }, []);
+
+  const addMessageAndGenerateReply = useCallback(async (content: string) => {
+    // Add the received message first
+    const newMessage: Message = {
+      id: Date.now().toString(),
+      content,
+      type: 'received',
+      timestamp: new Date(),
+    };
+    setMessages(prev => [...prev, newMessage]);
+
+    // Check if persona and goal are selected
+    if (!selectedPersona) {
+      toast.error('Select a persona first');
+      return;
+    }
+
+    if (!selectedGoal) {
+      toast.error('Set a goal first');
+      return;
+    }
+
+    // Auto-generate reply
+    setIsGenerating(true);
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    const reply = generateMockReply([...messages, newMessage], selectedPersona, selectedGoal);
+    
+    const replyMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      content: reply,
+      type: 'suggested',
+      timestamp: new Date(),
+    };
+    setMessages(prev => [...prev, replyMessage]);
+    toast.success('Reply generated! Click to copy.');
+    setIsGenerating(false);
+  }, [messages, selectedPersona, selectedGoal]);
 
   const replaceLastSuggestion = useCallback((content: string) => {
     setMessages(prev => {
@@ -143,6 +182,7 @@ export function useConversation() {
     setSelectedPersona,
     setSelectedGoal,
     addMessage,
+    addMessageAndGenerateReply,
     generateReply,
     clearConversation,
     openRefineInput,
