@@ -11,6 +11,8 @@ interface ConversationHeaderProps {
   selectedGoal?: Goal;
   onSelectPersona: (persona: Persona) => void;
   onSelectGoal: (goal: Goal) => void;
+  onCreatePersona: (persona: Persona) => void;
+  onCreateGoal: (goal: Goal) => void;
   onNewConversation: () => void;
   hasMessages: boolean;
 }
@@ -22,6 +24,8 @@ export function ConversationHeader({
   selectedGoal,
   onSelectPersona,
   onSelectGoal,
+  onCreatePersona,
+  onCreateGoal,
   onNewConversation,
   hasMessages,
 }: ConversationHeaderProps) {
@@ -44,11 +48,13 @@ export function ConversationHeader({
               personas={personas}
               selectedPersona={selectedPersona}
               onSelect={onSelectPersona}
+              onCreatePersona={onCreatePersona}
             />
             <GoalSelector
               goals={goals}
               selectedGoal={selectedGoal}
               onSelect={onSelectGoal}
+              onCreateGoal={onCreateGoal}
             />
             {hasMessages && (
               <Button

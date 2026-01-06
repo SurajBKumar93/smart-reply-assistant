@@ -4,11 +4,13 @@ import { MessageBubble } from '@/components/MessageBubble';
 import { EmptyState } from '@/components/EmptyState';
 import { RefineInput } from '@/components/RefineInput';
 import { useConversation } from '@/hooks/useConversation';
-import { defaultPersonas, defaultGoals } from '@/data/defaults';
+import { usePersonasAndGoals } from '@/hooks/usePersonasAndGoals';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useEffect, useRef } from 'react';
 
 const Index = () => {
+  const { personas, goals, addPersona, addGoal } = usePersonasAndGoals();
+  
   const {
     messages,
     selectedPersona,
@@ -17,7 +19,7 @@ const Index = () => {
     showRefineInput,
     setSelectedPersona,
     setSelectedGoal,
-    addMessage,
+    addMessageAndGenerateReply,
     generateReply,
     clearConversation,
     openRefineInput,
@@ -33,7 +35,7 @@ const Index = () => {
   }, [messages]);
 
   const handleSendMessage = (content: string) => {
-    addMessage(content, 'received');
+    addMessageAndGenerateReply(content);
   };
 
   // Find the latest suggested message
@@ -44,12 +46,14 @@ const Index = () => {
   return (
     <div className="flex flex-col h-screen bg-background">
       <ConversationHeader
-        personas={defaultPersonas}
-        goals={defaultGoals}
+        personas={personas}
+        goals={goals}
         selectedPersona={selectedPersona}
         selectedGoal={selectedGoal}
         onSelectPersona={setSelectedPersona}
         onSelectGoal={setSelectedGoal}
+        onCreatePersona={addPersona}
+        onCreateGoal={addGoal}
         onNewConversation={clearConversation}
         hasMessages={messages.length > 0}
       />
@@ -96,8 +100,6 @@ const Index = () => {
       ) : (
         <ChatInput
           onSend={handleSendMessage}
-          onGenerateReply={() => generateReply()}
-          hasMessages={messages.length > 0}
           isGenerating={isGenerating}
         />
       )}

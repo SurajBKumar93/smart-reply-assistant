@@ -6,16 +6,19 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
+import { CreatePersonaDialog } from './CreatePersonaDialog';
 
 interface PersonaSelectorProps {
   personas: Persona[];
   selectedPersona?: Persona;
   onSelect: (persona: Persona) => void;
+  onCreatePersona: (persona: Persona) => void;
 }
 
-export function PersonaSelector({ personas, selectedPersona, onSelect }: PersonaSelectorProps) {
+export function PersonaSelector({ personas, selectedPersona, onSelect, onCreatePersona }: PersonaSelectorProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -34,7 +37,7 @@ export function PersonaSelector({ personas, selectedPersona, onSelect }: Persona
           <ChevronDown className="h-3 w-3 opacity-50" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-64 p-2">
+      <DropdownMenuContent align="start" className="w-64 p-2 max-h-80 overflow-y-auto">
         {personas.map((persona) => (
           <DropdownMenuItem
             key={persona.id}
@@ -53,6 +56,8 @@ export function PersonaSelector({ personas, selectedPersona, onSelect }: Persona
             </div>
           </DropdownMenuItem>
         ))}
+        <DropdownMenuSeparator />
+        <CreatePersonaDialog onCreate={onCreatePersona} />
       </DropdownMenuContent>
     </DropdownMenu>
   );

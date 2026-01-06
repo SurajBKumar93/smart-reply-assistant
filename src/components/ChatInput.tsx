@@ -1,21 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Sparkles } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
 
 interface ChatInputProps {
   onSend: (message: string) => void;
-  onGenerateReply: () => void;
-  hasMessages: boolean;
   isGenerating: boolean;
   placeholder?: string;
 }
 
 export function ChatInput({
   onSend,
-  onGenerateReply,
-  hasMessages,
   isGenerating,
   placeholder = "Paste the message you received...",
 }: ChatInputProps) {
@@ -62,24 +57,12 @@ export function ChatInput({
             variant="ghost"
             size="iconSm"
             onClick={handleSend}
-            disabled={!message.trim()}
+            disabled={!message.trim() || isGenerating}
             className="absolute right-2 bottom-2 hover:bg-primary/10"
           >
             <Send className="h-4 w-4" />
           </Button>
         </div>
-
-        {hasMessages && (
-          <Button
-            variant="gradient"
-            onClick={onGenerateReply}
-            disabled={isGenerating}
-            className="w-full gap-2"
-          >
-            <Sparkles className={cn("h-4 w-4", isGenerating && "animate-pulse-soft")} />
-            {isGenerating ? 'Generating reply...' : 'Generate smart reply'}
-          </Button>
-        )}
       </div>
     </div>
   );
