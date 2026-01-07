@@ -1,12 +1,12 @@
-import { ConversationHeader } from '@/components/ConversationHeader';
 import { ChatInput } from '@/components/ChatInput';
-import { MessageBubble } from '@/components/MessageBubble';
-import { EmptyState } from '@/components/EmptyState';
 import { RefineInput } from '@/components/RefineInput';
+import { RoleSidebar } from '@/components/RoleSidebar';
+import { GoalSidebar } from '@/components/GoalSidebar';
+import { ConversationArea } from '@/components/ConversationArea';
+import { CreateRoleDialog } from '@/components/CreateRoleDialog';
+import { CreateGoalDialogNew } from '@/components/CreateGoalDialogNew';
 import { useConversation } from '@/hooks/useConversation';
 import { useRolesAndGoals } from '@/hooks/useRolesAndGoals';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { useEffect, useRef } from 'react';
 
 const Index = () => {
   const {
@@ -45,97 +45,81 @@ const Index = () => {
     closeRefineInput,
   } = useConversation();
 
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [messages]);
-
   const handleSendMessage = (content: string) => {
     addMessageAndGenerateReply(content);
   };
 
-  // Find the latest suggested message
-  const latestSuggestionId = messages
-    .filter(m => m.type === 'suggested')
-    .pop()?.id;
+  const handleOpenRoleDialog = () => {
+    handleRoleDialogChange(true);
+  };
+
+  const handleOpenGoalDialog = () => {
+    handleGoalDialogChange(true);
+  };
 
   return (
-    <div className="flex flex-col h-screen bg-background">
-      <ConversationHeader
+    <div className="flex h-screen bg-background">
+      {/* Left Sidebar - Roles */}
+      <RoleSidebar
         roles={roles}
-        goals={goals}
         selectedRole={selectedRole}
-        selectedGoal={selectedGoal}
         onSelectRole={setSelectedRole}
-        onSelectGoal={setSelectedGoal}
-        onCreateRole={addRole}
-        onCreateGoal={addGoal}
+        onAddRole={handleOpenRoleDialog}
         onEditRole={openEditRole}
-        onEditGoal={openEditGoal}
         onDeleteRole={deleteRole}
-        onDeleteGoal={deleteGoal}
-        onToggleRoleFavorite={toggleRoleFavorite}
-        onToggleGoalFavorite={toggleGoalFavorite}
-        onNewConversation={clearConversation}
-        hasMessages={messages.length > 0}
-        editingRole={editingRole}
-        roleDialogOpen={roleDialogOpen}
-        onRoleDialogChange={handleRoleDialogChange}
-        onUpdateRole={updateRole}
-        editingGoal={editingGoal}
-        goalDialogOpen={goalDialogOpen}
-        onGoalDialogChange={handleGoalDialogChange}
-        onUpdateGoal={updateGoal}
+        onToggleFavorite={toggleRoleFavorite}
       />
 
-      <main className="flex-1 flex flex-col overflow-hidden">
-        {messages.length === 0 ? (
-          <EmptyState />
-        ) : (
-          <ScrollArea className="flex-1" ref={scrollRef}>
-            <div className="max-w-3xl mx-auto p-4 space-y-4">
-              {messages.map((message) => (
-                <MessageBubble
-                  key={message.id}
-                  message={message}
-                  isLatestSuggestion={message.id === latestSuggestionId}
-                  onRegenerate={message.id === latestSuggestionId ? openRefineInput : undefined}
-                />
-              ))}
-              {isGenerating && (
-                <div className="flex justify-end">
-                  <div className="gradient-primary rounded-2xl rounded-br-md px-4 py-3 shadow-glow">
-                    <div className="flex items-center gap-2 text-primary-foreground">
-                      <div className="flex gap-1">
-                        <span className="w-2 h-2 bg-primary-foreground/60 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                        <span className="w-2 h-2 bg-primary-foreground/60 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                        <span className="w-2 h-2 bg-primary-foreground/60 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                      </div>
-                      <span className="text-sm">Crafting reply...</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </ScrollArea>
-        )}
-      </main>
+      {/* Center - Conversation */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <ConversationArea
+          messages={messages}
+          selectedRole={selectedRole}
+          selectedGoal={selectedGoal}
+          isGenerating={isGenerating}
+          onClearConversation={clearConversation}
+          onRegenerate={openRefineInput}
+        />
 
-      {showRefineInput ? (
-        <RefineInput
-          onSubmit={(instruction) => generateReply(instruction)}
-          onCancel={closeRefineInput}
-          isGenerating={isGenerating}
-        />
-      ) : (
-        <ChatInput
-          onSend={handleSendMessage}
-          isGenerating={isGenerating}
-        />
-      )}
+        {showRefineInput ? (
+          <RefineInput
+            onSubmit={(instruction) => generateReply(instruction)}
+            onCancel={closeRefineInput}
+            isGenerating={isGenerating}
+          />
+        ) : (
+          <ChatInput
+            onSend={handleSendMessage}
+            isGenerating={isGenerating}
+          />
+        )}
+      </div>
+
+      {/* Right Sidebar - Goals */}
+      <GoalSidebar
+        goals={goals}
+        selectedGoal={selectedGoal}
+        onSelectGoal={setSelectedGoal}
+        onAddGoal={handleOpenGoalDialog}
+        onEditGoal={openEditGoal}
+        onDeleteGoal={deleteGoal}
+        onToggleFavorite={toggleGoalFavorite}
+      />
+
+      {/* Dialogs */}
+      <CreateRoleDialog
+        open={roleDialogOpen}
+        onOpenChange={handleRoleDialogChange}
+        onCreate={editingRole ? updateRole : addRole}
+        editRole={editingRole}
+      />
+
+      <CreateGoalDialogNew
+        open={goalDialogOpen}
+        onOpenChange={handleGoalDialogChange}
+        onCreate={editingGoal ? updateGoal : addGoal}
+        editGoal={editingGoal}
+      />
     </div>
   );
 };
