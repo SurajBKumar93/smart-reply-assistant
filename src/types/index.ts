@@ -1,11 +1,15 @@
-export interface Persona {
+export interface Role {
   id: string;
   name: string;
   description: string;
   tone: 'formal' | 'casual' | 'friendly' | 'professional';
   messageLength: 'concise' | 'moderate' | 'detailed';
   icon: string;
+  isFavorite?: boolean;
 }
+
+// Keep Persona as alias for backward compatibility
+export type Persona = Role;
 
 export interface Contact {
   id: string;
@@ -20,6 +24,7 @@ export interface Goal {
   label: string;
   description: string;
   icon: string;
+  isFavorite?: boolean;
 }
 
 export interface Message {

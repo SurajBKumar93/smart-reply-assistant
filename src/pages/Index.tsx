@@ -4,20 +4,39 @@ import { MessageBubble } from '@/components/MessageBubble';
 import { EmptyState } from '@/components/EmptyState';
 import { RefineInput } from '@/components/RefineInput';
 import { useConversation } from '@/hooks/useConversation';
-import { usePersonasAndGoals } from '@/hooks/usePersonasAndGoals';
+import { useRolesAndGoals } from '@/hooks/useRolesAndGoals';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useEffect, useRef } from 'react';
 
 const Index = () => {
-  const { personas, goals, addPersona, addGoal } = usePersonasAndGoals();
+  const {
+    roles,
+    goals,
+    addRole,
+    updateRole,
+    deleteRole,
+    toggleRoleFavorite,
+    openEditRole,
+    editingRole,
+    roleDialogOpen,
+    handleRoleDialogChange,
+    addGoal,
+    updateGoal,
+    deleteGoal,
+    toggleGoalFavorite,
+    openEditGoal,
+    editingGoal,
+    goalDialogOpen,
+    handleGoalDialogChange,
+  } = useRolesAndGoals();
   
   const {
     messages,
-    selectedPersona,
+    selectedPersona: selectedRole,
     selectedGoal,
     isGenerating,
     showRefineInput,
-    setSelectedPersona,
+    setSelectedPersona: setSelectedRole,
     setSelectedGoal,
     addMessageAndGenerateReply,
     generateReply,
@@ -46,16 +65,30 @@ const Index = () => {
   return (
     <div className="flex flex-col h-screen bg-background">
       <ConversationHeader
-        personas={personas}
+        roles={roles}
         goals={goals}
-        selectedPersona={selectedPersona}
+        selectedRole={selectedRole}
         selectedGoal={selectedGoal}
-        onSelectPersona={setSelectedPersona}
+        onSelectRole={setSelectedRole}
         onSelectGoal={setSelectedGoal}
-        onCreatePersona={addPersona}
+        onCreateRole={addRole}
         onCreateGoal={addGoal}
+        onEditRole={openEditRole}
+        onEditGoal={openEditGoal}
+        onDeleteRole={deleteRole}
+        onDeleteGoal={deleteGoal}
+        onToggleRoleFavorite={toggleRoleFavorite}
+        onToggleGoalFavorite={toggleGoalFavorite}
         onNewConversation={clearConversation}
         hasMessages={messages.length > 0}
+        editingRole={editingRole}
+        roleDialogOpen={roleDialogOpen}
+        onRoleDialogChange={handleRoleDialogChange}
+        onUpdateRole={updateRole}
+        editingGoal={editingGoal}
+        goalDialogOpen={goalDialogOpen}
+        onGoalDialogChange={handleGoalDialogChange}
+        onUpdateGoal={updateGoal}
       />
 
       <main className="flex-1 flex flex-col overflow-hidden">
