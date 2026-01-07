@@ -1,6 +1,6 @@
-import { Persona, Goal } from '@/types';
+import { Role, Goal } from '@/types';
 
-export const defaultPersonas: Persona[] = [
+export const defaultRoles: Role[] = [
   {
     id: 'freelancer',
     name: 'Freelancer',
@@ -34,6 +34,9 @@ export const defaultPersonas: Persona[] = [
     icon: '👔',
   },
 ];
+
+// Keep for backward compatibility
+export const defaultPersonas = defaultRoles;
 
 export const defaultGoals: Goal[] = [
   {
