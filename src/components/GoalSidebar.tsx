@@ -1,11 +1,19 @@
 import { useState, useRef } from 'react';
-import { Plus, Star, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Star, Pencil, Trash2, icons } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Goal } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
+
+const GoalIcon = ({ iconName, className }: { iconName: string; className?: string }) => {
+  const IconComponent = icons[iconName as keyof typeof icons];
+  if (IconComponent) {
+    return <IconComponent className={className} />;
+  }
+  return <span className={className}>{iconName}</span>;
+};
 
 interface GoalSidebarProps {
   goals: Goal[];
@@ -97,7 +105,7 @@ export function GoalSidebar({
                               : 'bg-secondary'
                           )}
                         >
-                          {goal.icon}
+                          <GoalIcon iconName={goal.icon} className="w-6 h-6 text-foreground" />
                           {goal.isFavorite && (
                             <Star className="absolute -top-1 -right-1 w-3 h-3 fill-accent text-accent" />
                           )}
@@ -115,7 +123,7 @@ export function GoalSidebar({
                 <PopoverContent side="left" className="w-64 p-4">
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
-                      <span className="text-3xl">{goal.icon}</span>
+                      <GoalIcon iconName={goal.icon} className="w-8 h-8 text-foreground" />
                       <div>
                         <h4 className="font-semibold text-foreground">{goal.label}</h4>
                       </div>
