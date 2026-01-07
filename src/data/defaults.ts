@@ -7,7 +7,7 @@ export const defaultRoles: Role[] = [
     description: 'Professional yet approachable for client communications',
     tone: 'professional',
     messageLength: 'moderate',
-    icon: '💼',
+    icon: 'Briefcase',
   },
   {
     id: 'student',
@@ -15,7 +15,7 @@ export const defaultRoles: Role[] = [
     description: 'Respectful and clear for academic contexts',
     tone: 'formal',
     messageLength: 'concise',
-    icon: '📚',
+    icon: 'GraduationCap',
   },
   {
     id: 'friend',
@@ -23,7 +23,7 @@ export const defaultRoles: Role[] = [
     description: 'Warm and casual for friends and family',
     tone: 'friendly',
     messageLength: 'moderate',
-    icon: '💬',
+    icon: 'MessageCircle',
   },
   {
     id: 'manager',
@@ -31,7 +31,7 @@ export const defaultRoles: Role[] = [
     description: 'Clear, decisive leadership communication',
     tone: 'professional',
     messageLength: 'concise',
-    icon: '👔',
+    icon: 'UserCog',
   },
 ];
 
@@ -43,48 +43,48 @@ export const defaultGoals: Goal[] = [
     id: 'get-job',
     label: 'Get the job',
     description: 'Impress and secure the opportunity',
-    icon: '🎯',
+    icon: 'Target',
   },
   {
     id: 'book-call',
     label: 'Book a call',
     description: 'Schedule a meeting or discussion',
-    icon: '📅',
+    icon: 'CalendarCheck',
   },
   {
     id: 'negotiate',
     label: 'Negotiate politely',
     description: 'Find middle ground respectfully',
-    icon: '🤝',
+    icon: 'Handshake',
   },
   {
     id: 'follow-up',
     label: 'Follow up',
     description: 'Re-engage after no reply',
-    icon: '📨',
+    icon: 'Send',
   },
   {
     id: 'decline',
     label: 'Decline respectfully',
     description: 'Say no while preserving relationship',
-    icon: '🙏',
+    icon: 'HandHeart',
   },
   {
     id: 'de-escalate',
     label: 'De-escalate',
     description: 'Calm a tense situation',
-    icon: '🕊️',
+    icon: 'Feather',
   },
   {
     id: 'clarify',
     label: 'Clarify',
     description: 'Get or provide clear information',
-    icon: '💡',
+    icon: 'Lightbulb',
   },
   {
     id: 'build-rapport',
     label: 'Build rapport',
     description: 'Strengthen the relationship',
-    icon: '❤️',
+    icon: 'Heart',
   },
 ];
