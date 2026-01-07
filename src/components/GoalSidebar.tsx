@@ -64,7 +64,6 @@ export function GoalSidebar({
   return (
     <TooltipProvider>
       <div className="w-16 bg-card border-l border-border flex flex-col items-center py-4 gap-2">
-        <span className="text-xs font-semibold text-muted-foreground tracking-wide uppercase">Goals</span>
         <ScrollArea className="flex-1 w-full">
           <div className="flex flex-col items-center gap-2 px-2">
             {sortedGoals.map((goal) => (
@@ -172,6 +171,7 @@ export function GoalSidebar({
             <p>Add Goal</p>
           </TooltipContent>
         </Tooltip>
+        <span className="text-xs font-semibold text-muted-foreground tracking-wide uppercase">Goals</span>
       </div>
     </TooltipProvider>
   );
