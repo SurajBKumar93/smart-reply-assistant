@@ -75,7 +75,7 @@ export function GoalSidebar({
                 <PopoverTrigger asChild>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <button
+                      <div
                         onClick={() => {
                           if (!longPressGoal) {
                             onSelectGoal(goal);
@@ -86,19 +86,26 @@ export function GoalSidebar({
                         onMouseLeave={handleMouseUp}
                         onTouchStart={() => handleTouchStart(goal)}
                         onTouchEnd={handleTouchEnd}
-                        className={cn(
-                          'w-12 h-12 rounded-xl flex items-center justify-center text-2xl transition-all relative',
-                          'hover:bg-muted hover:scale-105',
-                          selectedGoal?.id === goal.id
-                            ? 'bg-accent/20 ring-2 ring-accent shadow-glow'
-                            : 'bg-secondary'
-                        )}
+                        className="flex flex-col items-center gap-1 cursor-pointer"
                       >
-                        {goal.icon}
-                        {goal.isFavorite && (
-                          <Star className="absolute -top-1 -right-1 w-3 h-3 fill-accent text-accent" />
-                        )}
-                      </button>
+                        <div
+                          className={cn(
+                            'w-12 h-12 rounded-xl flex items-center justify-center text-2xl transition-all relative',
+                            'hover:bg-muted hover:scale-105',
+                            selectedGoal?.id === goal.id
+                              ? 'bg-accent/20 ring-2 ring-accent shadow-glow'
+                              : 'bg-secondary'
+                          )}
+                        >
+                          {goal.icon}
+                          {goal.isFavorite && (
+                            <Star className="absolute -top-1 -right-1 w-3 h-3 fill-accent text-accent" />
+                          )}
+                        </div>
+                        <span className="text-[10px] text-muted-foreground text-center leading-tight max-w-[56px] truncate">
+                          {goal.label}
+                        </span>
+                      </div>
                     </TooltipTrigger>
                     <TooltipContent side="left">
                       <p className="font-medium">{goal.label}</p>

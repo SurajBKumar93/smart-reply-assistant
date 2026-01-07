@@ -75,7 +75,7 @@ export function RoleSidebar({
                 <PopoverTrigger asChild>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <button
+                      <div
                         onClick={() => {
                           if (!longPressRole) {
                             onSelectRole(role);
@@ -86,19 +86,26 @@ export function RoleSidebar({
                         onMouseLeave={handleMouseUp}
                         onTouchStart={() => handleTouchStart(role)}
                         onTouchEnd={handleTouchEnd}
-                        className={cn(
-                          'w-12 h-12 rounded-xl flex items-center justify-center text-2xl transition-all relative',
-                          'hover:bg-muted hover:scale-105',
-                          selectedRole?.id === role.id
-                            ? 'bg-primary/20 ring-2 ring-primary shadow-glow'
-                            : 'bg-secondary'
-                        )}
+                        className="flex flex-col items-center gap-1 cursor-pointer"
                       >
-                        {role.icon}
-                        {role.isFavorite && (
-                          <Star className="absolute -top-1 -right-1 w-3 h-3 fill-accent text-accent" />
-                        )}
-                      </button>
+                        <div
+                          className={cn(
+                            'w-12 h-12 rounded-xl flex items-center justify-center text-2xl transition-all relative',
+                            'hover:bg-muted hover:scale-105',
+                            selectedRole?.id === role.id
+                              ? 'bg-primary/20 ring-2 ring-primary shadow-glow'
+                              : 'bg-secondary'
+                          )}
+                        >
+                          {role.icon}
+                          {role.isFavorite && (
+                            <Star className="absolute -top-1 -right-1 w-3 h-3 fill-accent text-accent" />
+                          )}
+                        </div>
+                        <span className="text-[10px] text-muted-foreground text-center leading-tight max-w-[56px] truncate">
+                          {role.name}
+                        </span>
+                      </div>
                     </TooltipTrigger>
                     <TooltipContent side="right">
                       <p className="font-medium">{role.name}</p>
