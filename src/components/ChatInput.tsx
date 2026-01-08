@@ -41,8 +41,8 @@ export function ChatInput({
   };
 
   return (
-    <div className="border-t border-border bg-card p-4">
-      <div className="max-w-3xl mx-auto space-y-3">
+    <div className="border-t border-border bg-card p-3 md:p-4">
+      <div className="max-w-3xl mx-auto">
         <div className="relative">
           <Textarea
             ref={textareaRef}
@@ -50,17 +50,17 @@ export function ChatInput({
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            className="min-h-[52px] max-h-[200px] resize-none pr-12 rounded-xl bg-muted border-0 focus-visible:ring-1 focus-visible:ring-primary/50"
+            className="min-h-[48px] md:min-h-[52px] max-h-[150px] md:max-h-[200px] resize-none pr-12 rounded-xl bg-muted border-0 focus-visible:ring-1 focus-visible:ring-primary/50 text-sm md:text-base"
             rows={1}
           />
           <Button
             variant="ghost"
-            size="iconSm"
+            size="icon"
             onClick={handleSend}
             disabled={!message.trim() || isGenerating}
-            className="absolute right-2 bottom-2 hover:bg-primary/10"
+            className="absolute right-2 bottom-2 h-8 w-8 md:h-9 md:w-9 hover:bg-primary/10"
           >
-            <Send className="h-4 w-4" />
+            <Send className="h-4 w-4 md:h-5 md:w-5" />
           </Button>
         </div>
       </div>
