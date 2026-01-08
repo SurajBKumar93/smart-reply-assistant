@@ -2,6 +2,7 @@ import { ChatInput } from '@/components/ChatInput';
 import { RefineInput } from '@/components/RefineInput';
 import { RoleSidebar } from '@/components/RoleSidebar';
 import { GoalSidebar } from '@/components/GoalSidebar';
+import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { ConversationArea } from '@/components/ConversationArea';
 import { CreateRoleDialog } from '@/components/CreateRoleDialog';
 import { CreateGoalDialogNew } from '@/components/CreateGoalDialogNew';
@@ -59,19 +60,21 @@ const Index = () => {
 
   return (
     <div className="flex h-screen bg-background">
-      {/* Left Sidebar - Roles */}
-      <RoleSidebar
-        roles={roles}
-        selectedRole={selectedRole}
-        onSelectRole={setSelectedRole}
-        onAddRole={handleOpenRoleDialog}
-        onEditRole={openEditRole}
-        onDeleteRole={deleteRole}
-        onToggleFavorite={toggleRoleFavorite}
-      />
+      {/* Left Sidebar - Roles (hidden on mobile) */}
+      <div className="hidden md:block">
+        <RoleSidebar
+          roles={roles}
+          selectedRole={selectedRole}
+          onSelectRole={setSelectedRole}
+          onAddRole={handleOpenRoleDialog}
+          onEditRole={openEditRole}
+          onDeleteRole={deleteRole}
+          onToggleFavorite={toggleRoleFavorite}
+        />
+      </div>
 
       {/* Center - Conversation */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden pb-[76px] md:pb-0">
         <ConversationArea
           messages={messages}
           selectedRole={selectedRole}
@@ -95,15 +98,29 @@ const Index = () => {
         )}
       </div>
 
-      {/* Right Sidebar - Goals */}
-      <GoalSidebar
+      {/* Right Sidebar - Goals (hidden on mobile) */}
+      <div className="hidden md:block">
+        <GoalSidebar
+          goals={goals}
+          selectedGoal={selectedGoal}
+          onSelectGoal={setSelectedGoal}
+          onAddGoal={handleOpenGoalDialog}
+          onEditGoal={openEditGoal}
+          onDeleteGoal={deleteGoal}
+          onToggleFavorite={toggleGoalFavorite}
+        />
+      </div>
+
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav
+        roles={roles}
         goals={goals}
+        selectedRole={selectedRole}
         selectedGoal={selectedGoal}
+        onSelectRole={setSelectedRole}
         onSelectGoal={setSelectedGoal}
+        onAddRole={handleOpenRoleDialog}
         onAddGoal={handleOpenGoalDialog}
-        onEditGoal={openEditGoal}
-        onDeleteGoal={deleteGoal}
-        onToggleFavorite={toggleGoalFavorite}
       />
 
       {/* Dialogs */}

@@ -31,7 +31,7 @@ export function MessageBubble({ message, isLatestSuggestion, onRegenerate }: Mes
     >
       <div
         className={cn(
-          'group relative max-w-[85%] rounded-2xl px-4 py-3',
+          'group relative max-w-[90%] md:max-w-[85%] rounded-2xl px-3 md:px-4 py-2.5 md:py-3',
           isReceived
             ? 'bg-muted text-foreground rounded-bl-md'
             : 'gradient-primary text-primary-foreground rounded-br-md shadow-glow'
@@ -39,23 +39,23 @@ export function MessageBubble({ message, isLatestSuggestion, onRegenerate }: Mes
       >
         {!isReceived && (
           <div className="absolute -top-2 -right-1">
-            <Sparkles className="h-4 w-4 text-accent animate-pulse-soft" />
+            <Sparkles className="h-3 w-3 md:h-4 md:w-4 text-accent animate-pulse-soft" />
           </div>
         )}
-        <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+        <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap">{message.content}</p>
         
         {!isReceived && (
-          <div className="absolute -bottom-1 -right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="absolute -bottom-1 -right-1 flex gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
             <Button
               variant="ghost"
-              size="iconSm"
+              size="icon"
               onClick={handleCopy}
-              className="bg-background/80 hover:bg-background shadow-soft"
+              className="h-8 w-8 bg-background/80 hover:bg-background shadow-soft"
             >
               {copied ? (
-                <Check className="h-3 w-3 text-green-500" />
+                <Check className="h-4 w-4 text-green-500" />
               ) : (
-                <Copy className="h-3 w-3" />
+                <Copy className="h-4 w-4" />
               )}
             </Button>
           </div>
@@ -68,7 +68,7 @@ export function MessageBubble({ message, isLatestSuggestion, onRegenerate }: Mes
           variant="ghost"
           size="sm"
           onClick={onRegenerate}
-          className="text-xs text-muted-foreground hover:text-foreground gap-1.5"
+          className="text-xs text-muted-foreground hover:text-foreground gap-1.5 h-9 px-3"
         >
           <RefreshCw className="h-3 w-3" />
           Not quite right? Refine it
