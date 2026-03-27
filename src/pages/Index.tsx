@@ -117,18 +117,21 @@ const Index = () => {
     handleGoalDialogChange(true);
   };
 
-  // Auto-save when a new reply is generated
-  // We detect this by checking if the last message is a suggestion
-  const lastMessage = messages[messages.length - 1];
-  if (lastMessage?.type === 'suggested' && messages.length >= 2) {
-    // Debounced save would be better, but for simplicity:
-    setTimeout(() => {
-      saveConversation(messages, selectedRole, selectedGoal, currentConversationId);
-      if (!currentConversationId) {
-        setCurrentConversationId(Date.now().toString());
+  // Auto-save when messages change
+  const prevMessagesLenRef = useRef(0);
+  useEffect(() => {
+    if (messages.length >= 2 && messages.length > prevMessagesLenRef.current) {
+      const lastMsg = messages[messages.length - 1];
+      if (lastMsg?.type === 'suggested') {
+        saveConversation(messages, selectedRole, selectedGoal, currentConversationId);
+        if (!currentConversationId) {
+          setCurrentConversationId(Date.now().toString());
+        }
       }
-    }, 500);
-  }
+    }
+    prevMessagesLenRef.current = messages.length;
+  }, [messages, selectedRole, selectedGoal, currentConversationId, saveConversation]);
+
 
   return (
     <div className="flex h-[100dvh] bg-background pt-safe">
