@@ -35,7 +35,7 @@ export function RoleSidebar({
   onToggleFavorite,
 }: RoleSidebarProps) {
   const [longPressRole, setLongPressRole] = useState<Role | null>(null);
-  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const sortedRoles = [...roles].sort((a, b) => {
     if (a.isFavorite && !b.isFavorite) return -1;
