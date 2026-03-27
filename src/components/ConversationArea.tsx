@@ -13,6 +13,7 @@ interface ConversationAreaProps {
   isGenerating: boolean;
   onClearConversation: () => void;
   onRegenerate: () => void;
+  historyButton?: React.ReactNode;
 }
 
 export function ConversationArea({
