@@ -62,17 +62,20 @@ export function ConversationArea({
             <span className="text-xs md:text-sm text-muted-foreground">Tap below to select role & goal</span>
           )}
         </div>
-        {messages.length > 0 && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClearConversation}
-            className="text-muted-foreground hover:text-foreground shrink-0 h-8 md:h-9 px-2 md:px-3"
-          >
-            <MessageSquarePlus className="w-4 h-4 md:mr-2" />
-            <span className="hidden md:inline">New</span>
-          </Button>
-        )}
+        <div className="flex items-center gap-1 shrink-0">
+          {historyButton}
+          {messages.length > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClearConversation}
+              className="text-muted-foreground hover:text-foreground shrink-0 h-8 md:h-9 px-2 md:px-3"
+            >
+              <MessageSquarePlus className="w-4 h-4 md:mr-2" />
+              <span className="hidden md:inline">New</span>
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Messages */}
