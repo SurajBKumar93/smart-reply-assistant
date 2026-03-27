@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { ChatInput } from '@/components/ChatInput';
 import { RefineInput } from '@/components/RefineInput';
 import { RoleSidebar } from '@/components/RoleSidebar';
 import { GoalSidebar } from '@/components/GoalSidebar';
