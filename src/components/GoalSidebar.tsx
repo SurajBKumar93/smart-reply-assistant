@@ -35,7 +35,7 @@ export function GoalSidebar({
   onToggleFavorite,
 }: GoalSidebarProps) {
   const [longPressGoal, setLongPressGoal] = useState<Goal | null>(null);
-  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const sortedGoals = [...goals].sort((a, b) => {
     if (a.isFavorite && !b.isFavorite) return -1;
