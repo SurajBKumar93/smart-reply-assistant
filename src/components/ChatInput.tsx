@@ -123,15 +123,27 @@ export function ChatInput({
           </div>
         )}
 
-        <div className="relative flex items-end gap-2">
-          {/* Attachment button */}
+        <div className="relative flex items-end">
+          <Textarea
+            ref={textareaRef}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder}
+            className="min-h-[44px] md:min-h-[52px] max-h-[120px] md:max-h-[200px] resize-none pl-11 pr-12 rounded-2xl bg-muted border-0 focus-visible:ring-1 focus-visible:ring-primary/50 text-[16px] md:text-base"
+            rows={1}
+            enterKeyHint="send"
+            autoComplete="off"
+            autoCorrect="on"
+          />
+          {/* Attachment button inside input, left side */}
           <Button
             variant="ghost"
             size="icon"
             onClick={() => fileInputRef.current?.click()}
-            className="h-9 w-9 shrink-0 hover:bg-primary/10 active:scale-90 transition-transform text-muted-foreground"
+            className="absolute left-1.5 bottom-1.5 h-8 w-8 hover:bg-primary/10 active:scale-90 transition-transform text-muted-foreground"
           >
-            <Paperclip className="h-4 w-4 md:h-5 md:w-5" />
+            <Paperclip className="h-4 w-4" />
           </Button>
           <input
             ref={fileInputRef}
@@ -141,25 +153,13 @@ export function ChatInput({
             onChange={handleFileSelect}
             className="hidden"
           />
-
-          <Textarea
-            ref={textareaRef}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={placeholder}
-            className="min-h-[44px] md:min-h-[52px] max-h-[120px] md:max-h-[200px] resize-none pr-12 rounded-2xl bg-muted border-0 focus-visible:ring-1 focus-visible:ring-primary/50 text-[16px] md:text-base"
-            rows={1}
-            enterKeyHint="send"
-            autoComplete="off"
-            autoCorrect="on"
-          />
+          {/* Send button inside input, right side */}
           <Button
             variant="ghost"
             size="icon"
             onClick={handleSend}
             disabled={!hasContent || isGenerating}
-            className="absolute right-2 bottom-1.5 h-9 w-9 md:h-9 md:w-9 hover:bg-primary/10 active:scale-90 transition-transform"
+            className="absolute right-1.5 bottom-1.5 h-8 w-8 hover:bg-primary/10 active:scale-90 transition-transform"
           >
             <Send className="h-4 w-4 md:h-5 md:w-5" />
           </Button>
