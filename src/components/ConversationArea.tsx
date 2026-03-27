@@ -38,7 +38,7 @@ export function ConversationArea({
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-background">
       {/* Header - Compact on mobile */}
-      <div className="h-12 md:h-14 border-b border-border px-3 md:px-4 flex items-center justify-between bg-card/50 shrink-0">
+      <div className="h-11 md:h-14 border-b border-border px-3 md:px-4 flex items-center justify-between bg-card/50 glass shrink-0">
         <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
           {selectedRole && (
             <div className="flex items-center gap-1.5 md:gap-2 px-2 md:px-3 py-1 md:py-1.5 rounded-full bg-primary/10 text-xs md:text-sm shrink-0">

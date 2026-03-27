@@ -59,7 +59,7 @@ const Index = () => {
   };
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-[100dvh] bg-background pt-safe">
       {/* Left Sidebar - Roles (hidden on mobile) */}
       <div className="hidden md:block">
         <RoleSidebar

@@ -51,7 +51,7 @@ export function MobileBottomNav({
   });
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border px-2 pb-safe z-50 md:hidden">
+    <div className="fixed bottom-0 left-0 right-0 bg-card/95 glass border-t border-border px-2 pb-safe pl-safe pr-safe z-50 md:hidden">
       <div className="flex items-center justify-between gap-2 py-2">
         {/* Roles Section */}
         <Sheet open={rolesOpen} onOpenChange={setRolesOpen}>
