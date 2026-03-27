@@ -23,6 +23,7 @@ export function ConversationArea({
   isGenerating,
   onClearConversation,
   onRegenerate,
+  historyButton,
 }: ConversationAreaProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
